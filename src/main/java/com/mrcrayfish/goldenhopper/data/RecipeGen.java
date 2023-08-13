@@ -1,7 +1,10 @@
 package com.mrcrayfish.goldenhopper.data;
 
+import java.util.function.Consumer;
+
 import com.mrcrayfish.goldenhopper.init.ModBlocks;
 import com.mrcrayfish.goldenhopper.init.ModItems;
+
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -10,18 +13,13 @@ import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.common.Tags;
 
-import java.util.function.Consumer;
-
-public class RecipeGen extends RecipeProvider
-{
-    public RecipeGen(PackOutput output)
-    {
+public class RecipeGen extends RecipeProvider {
+    public RecipeGen(PackOutput output) {
         super(output);
     }
 
     @Override
-    protected void buildRecipes(Consumer<FinishedRecipe> consumer)
-    {
+    protected void buildRecipes(Consumer<FinishedRecipe> consumer) {
         ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ModBlocks.GOLDEN_HOPPER.get())
                 .pattern("ICI")
                 .pattern("IHI")

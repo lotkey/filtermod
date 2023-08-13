@@ -8,6 +8,7 @@ import com.mrcrayfish.goldenhopper.init.ModBlocks;
 import com.mrcrayfish.goldenhopper.init.ModContainers;
 import com.mrcrayfish.goldenhopper.init.ModEntities;
 import com.mrcrayfish.goldenhopper.init.ModItems;
+
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -23,10 +24,8 @@ import net.minecraftforge.registries.RegistryObject;
  * Author: MrCrayfish
  */
 @Mod(Reference.MOD_ID)
-public class GoldenHopper
-{
-    public GoldenHopper()
-    {
+public class GoldenHopper {
+    public GoldenHopper() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         ModBlocks.REGISTER.register(bus);
         ModItems.REGISTER.register(bus);
@@ -38,13 +37,11 @@ public class GoldenHopper
         bus.addListener(this::onCreativeTabBuilding);
     }
 
-    private void onClientSetup(FMLClientSetupEvent event)
-    {
+    private void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(ClientHandler::init);
     }
 
-    private void onGatherData(GatherDataEvent event)
-    {
+    private void onGatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
         PackOutput output = generator.getPackOutput();
         generator.addProvider(event.includeServer(), new RecipeGen(output));
@@ -52,8 +49,7 @@ public class GoldenHopper
     }
 
     private void onCreativeTabBuilding(CreativeModeTabEvent.BuildContents event) {
-        if (event.getTab().equals(CreativeModeTabs.REDSTONE_BLOCKS))
-        {
+        if (event.getTab().equals(CreativeModeTabs.REDSTONE_BLOCKS)) {
             ModItems.REGISTER.getEntries().stream().map(RegistryObject::get).forEach(event::accept);
         }
     }

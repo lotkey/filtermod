@@ -1,10 +1,16 @@
 package com.mrcrayfish.goldenhopper.world.entity.vehicle;
 
+import java.util.List;
+import java.util.stream.IntStream;
+
+import javax.annotation.Nullable;
+
 import com.mrcrayfish.goldenhopper.init.ModBlocks;
 import com.mrcrayfish.goldenhopper.init.ModEntities;
 import com.mrcrayfish.goldenhopper.init.ModItems;
 import com.mrcrayfish.goldenhopper.world.inventory.GoldenHopperMenu;
 import com.mrcrayfish.goldenhopper.world.level.block.entity.AbstractHopperBlockEntity;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -29,163 +35,129 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.network.NetworkHooks;
 
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.stream.IntStream;
-
 /**
  * Author: MrCrayfish
  */
-public class GoldenHopperMinecart extends AbstractMinecartContainer implements Hopper, WorldlyContainer
-{
+public class GoldenHopperMinecart extends AbstractMinecartContainer implements Hopper, WorldlyContainer {
     private boolean blocked = true;
     private int transferTicker = -1;
     private final BlockPos lastPosition = BlockPos.ZERO;
 
-    public GoldenHopperMinecart(EntityType<?> type, Level level)
-    {
+    public GoldenHopperMinecart(EntityType<?> type, Level level) {
         super(type, level);
     }
 
-    public GoldenHopperMinecart(Level level, double x, double y, double z)
-    {
+    public GoldenHopperMinecart(Level level, double x, double y, double z) {
         super(ModEntities.GOLDEN_HOPPER_MINECART.get(), x, y, z, level);
     }
 
-    public boolean isBlocked()
-    {
+    public boolean isBlocked() {
         return blocked;
     }
 
-    public void setBlocked(boolean blocked)
-    {
+    public void setBlocked(boolean blocked) {
         this.blocked = blocked;
     }
 
-    public void setTransferTicker(int transferTicker)
-    {
+    public void setTransferTicker(int transferTicker) {
         this.transferTicker = transferTicker;
     }
 
-    public boolean canTransfer()
-    {
+    public boolean canTransfer() {
         return this.transferTicker > 0;
     }
 
     @Override
-    protected AbstractContainerMenu createMenu(int windowId, Inventory playerInventory)
-    {
+    protected AbstractContainerMenu createMenu(int windowId, Inventory playerInventory) {
         return new GoldenHopperMenu(windowId, playerInventory, this);
     }
 
     @Override
-    public BlockState getDefaultDisplayBlockState()
-    {
+    public BlockState getDefaultDisplayBlockState() {
         return ModBlocks.GOLDEN_HOPPER.get().defaultBlockState();
     }
 
     @Override
-    public int getDefaultDisplayOffset()
-    {
+    public int getDefaultDisplayOffset() {
         return 1;
     }
 
     @Override
-    protected Item getDropItem()
-    {
+    protected Item getDropItem() {
         return ModItems.GOLDEN_HOPPER_MINECART.get();
     }
 
     @Override
-    public ItemStack getPickResult()
-    {
+    public ItemStack getPickResult() {
         return new ItemStack(ModItems.GOLDEN_HOPPER_MINECART.get());
     }
 
     @Override
-    public Type getMinecartType()
-    {
+    public Type getMinecartType() {
         return Type.HOPPER;
     }
 
     @Override
-    public double getLevelX()
-    {
+    public double getLevelX() {
         return this.getX();
     }
 
     @Override
-    public double getLevelY()
-    {
+    public double getLevelY() {
         return this.getY() + 0.5D;
     }
 
     @Override
-    public double getLevelZ()
-    {
+    public double getLevelZ() {
         return this.getZ();
     }
 
     @Override
-    public int getContainerSize()
-    {
+    public int getContainerSize() {
         return 6;
     }
 
     @Override
-    public boolean canPlaceItem(int index, ItemStack stack)
-    {
+    public boolean canPlaceItem(int index, ItemStack stack) {
         return index != 0 && (this.getItem(0).isEmpty() || stack.getItem() == this.getItem(0).getItem());
     }
 
     @Override
-    public int[] getSlotsForFace(Direction side)
-    {
+    public int[] getSlotsForFace(Direction side) {
         return IntStream.range(1, this.getContainerSize()).toArray();
     }
 
     @Override
-    public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction)
-    {
+    public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction) {
         return index != 0 && (this.getItem(0).isEmpty() || stack.getItem() == this.getItem(0).getItem());
     }
 
     @Override
-    public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction)
-    {
+    public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
         return index != 0;
     }
 
     @Override
-    public void activateMinecart(int x, int y, int z, boolean receivingPower)
-    {
-        if(receivingPower == this.isBlocked())
-        {
+    public void activateMinecart(int x, int y, int z, boolean receivingPower) {
+        if (receivingPower == this.isBlocked()) {
             this.setBlocked(!receivingPower);
         }
     }
 
     @Override
-    public void tick()
-    {
+    public void tick() {
         super.tick();
-        if(!this.level.isClientSide && this.isAlive() && this.isBlocked())
-        {
+        if (!this.level.isClientSide && this.isAlive() && this.isBlocked()) {
             BlockPos pos = this.blockPosition();
-            if(pos.equals(this.lastPosition))
-            {
+            if (pos.equals(this.lastPosition)) {
                 this.transferTicker--;
-            }
-            else
-            {
+            } else {
                 this.setTransferTicker(0);
             }
 
-            if(!this.canTransfer())
-            {
+            if (!this.canTransfer()) {
                 this.setTransferTicker(0);
-                if(this.captureDroppedItems())
-                {
+                if (this.captureDroppedItems()) {
                     this.setTransferTicker(4);
                     this.setChanged();
                 }
@@ -194,15 +166,13 @@ public class GoldenHopperMinecart extends AbstractMinecartContainer implements H
 
     }
 
-    private boolean captureDroppedItems()
-    {
-        if(HopperBlockEntity.suckInItems(this.level, this))
-        {
+    private boolean captureDroppedItems() {
+        if (HopperBlockEntity.suckInItems(this.level, this)) {
             return true;
         }
-        List<ItemEntity> list = this.level.getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate(0.25D, 0.0D, 0.25D), EntitySelector.ENTITY_STILL_ALIVE);
-        if(!list.isEmpty())
-        {
+        List<ItemEntity> list = this.level.getEntitiesOfClass(ItemEntity.class,
+                this.getBoundingBox().inflate(0.25D, 0.0D, 0.25D), EntitySelector.ENTITY_STILL_ALIVE);
+        if (!list.isEmpty()) {
             this.getCapability(ForgeCapabilities.ITEM_HANDLER, null).ifPresent(handler -> {
                 AbstractHopperBlockEntity.addItemEntity(this, handler, list.get(0));
             });
@@ -211,40 +181,34 @@ public class GoldenHopperMinecart extends AbstractMinecartContainer implements H
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag compound)
-    {
+    protected void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putInt("TransferCooldown", this.transferTicker);
         compound.putBoolean("Enabled", this.blocked);
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag compound)
-    {
+    protected void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         this.transferTicker = compound.getInt("TransferCooldown");
         this.blocked = !compound.contains("Enabled") || compound.getBoolean("Enabled");
     }
 
     @Override
-    public void destroy(DamageSource source)
-    {
+    public void destroy(DamageSource source) {
         super.destroy(source);
-        if(this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS))
-        {
+        if (this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
             this.spawnAtLocation(ModBlocks.GOLDEN_HOPPER.get());
         }
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket()
-    {
+    public Packet<ClientGamePacketListener> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
-    public int getComparatorLevel()
-    {
+    public int getComparatorLevel() {
         float filled = IntStream.range(1, this.getContainerSize())
                 .mapToObj(this::getItem)
                 .filter(stack -> !stack.isEmpty())
