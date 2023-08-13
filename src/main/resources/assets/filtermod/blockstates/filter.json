@@ -1,0 +1,22 @@
+{
+    "variants": {
+        "facing=down": {
+            "model": "filtermod:block/filter"
+        },
+        "facing=north": {
+            "model": "filtermod:block/filter_side"
+        },
+        "facing=south": {
+            "model": "filtermod:block/filter_side",
+            "y": 180
+        },
+        "facing=west": {
+            "model": "filtermod:block/filter_side",
+            "y": 270
+        },
+        "facing=east": {
+            "model": "filtermod:block/filter_side",
+            "y": 90
+        }
+    }
+}

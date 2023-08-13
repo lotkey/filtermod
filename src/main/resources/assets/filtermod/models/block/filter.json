@@ -1,0 +1,9 @@
+{
+    "parent": "minecraft:block/hopper",
+    "textures": {
+        "particle": "filtermod:block/filter_outside",
+        "top": "filtermod:block/filter_top",
+        "side": "filtermod:block/filter_outside",
+        "inside": "filtermod:block/filter_inside"
+    }
+}
