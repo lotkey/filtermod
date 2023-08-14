@@ -12,9 +12,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-/**
- * Author: MrCrayfish
- */
 public class FilterMenu extends AbstractContainerMenu {
     private final Container hopperInventory;
     private static final int Size = 50;

@@ -20,9 +20,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
-/**
- * Author: MrCrayfish
- */
 public class FilterBlockEntity extends AbstractHopperBlockEntity implements WorldlyContainer {
     private static final int TRANSFER_COOLDOWN = 8;
     private static final int CONTAINER_SIZE = 50;

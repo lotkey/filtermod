@@ -19,9 +19,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegistryObject;
 
-/**
- * Author: MrCrayfish
- */
 @Mod(Reference.MOD_ID)
 public class Filter {
     public Filter() {
