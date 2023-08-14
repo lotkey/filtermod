@@ -43,10 +43,10 @@ public class FilterScreen extends AbstractContainerScreen<FilterMenu> {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         int startX = (this.width - this.imageWidth) / 2;
         int startY = (this.height - this.imageHeight) / 2;
-        this.blit(poseStack, startX, startY, 0, 0, this.imageWidth, this.imageHeight);
+        blit(poseStack, startX, startY, 0, 0, this.imageWidth, this.imageHeight);
         Slot slot = this.menu.getSlot(0);
         if (!slot.hasItem()) {
-            this.blit(poseStack, this.leftPos + slot.x, this.topPos + slot.y, this.imageWidth, 0, 16, 16);
+            blit(poseStack, this.leftPos + slot.x, this.topPos + slot.y, this.imageWidth, 0, 16, 16);
         }
     }
 }
