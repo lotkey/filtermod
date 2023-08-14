@@ -1,0 +1,25 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "C#C",
+        "CHC",
+        "RCR"
+    ],
+    "key": {
+        "H": {
+            "item": "minecraft:hopper"
+        },
+        "R": {
+            "item": "minecraft:redstone"
+        },
+        "#": {
+            "item": "minecraft:comparator"
+        },
+        "C": {
+            "item": "minecraft:copper_ingot"
+        }
+    },
+    "result": {
+        "item": "filtermod:filter"
+    }
+}

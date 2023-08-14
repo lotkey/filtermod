@@ -2,7 +2,6 @@ package com.lotkey.filtermod;
 
 import com.lotkey.filtermod.client.ClientHandler;
 import com.lotkey.filtermod.data.LootTableGen;
-import com.lotkey.filtermod.data.RecipeGen;
 import com.lotkey.filtermod.init.ModBlockEntities;
 import com.lotkey.filtermod.init.ModBlocks;
 import com.lotkey.filtermod.init.ModContainers;
@@ -44,7 +43,6 @@ public class Filter {
     private void onGatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
         PackOutput output = generator.getPackOutput();
-        generator.addProvider(event.includeServer(), new RecipeGen(output));
         generator.addProvider(event.includeServer(), new LootTableGen(output));
     }
 

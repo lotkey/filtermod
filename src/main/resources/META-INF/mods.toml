@@ -26,4 +26,4 @@ description="Adds a new hopper variant that can filter items"
 
 [modproperties.filtermod]
     catalogueItemIcon="filtermod:filter"
-    configuredBackground="minecraft:textures/block/gold_ore.png"
+    configuredBackground="minecraft:textures/block/copper_ore.png"
