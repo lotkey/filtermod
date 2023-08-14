@@ -9,7 +9,6 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.Slot;
 
 /**
  * Author: MrCrayfish
@@ -20,7 +19,12 @@ public class FilterScreen extends AbstractContainerScreen<FilterMenu> {
 
     public FilterScreen(FilterMenu container, Inventory playerInventory, Component titleIn) {
         super(container, playerInventory, titleIn);
-        this.imageHeight = 133;
+        this.imageHeight = 240;
+    }
+
+    @Override
+    protected void init() {
+        super.init();
     }
 
     @Override
@@ -33,7 +37,7 @@ public class FilterScreen extends AbstractContainerScreen<FilterMenu> {
     @Override
     protected void renderLabels(PoseStack poseStack, int mouseX, int mouseY) {
         this.font.draw(poseStack, this.title.getString(), 8.0F, 6.0F, 4210752);
-        this.font.draw(poseStack, this.playerInventoryTitle, 8.0F, (float) (this.imageHeight - 96 + 2), 4210752);
+        this.font.draw(poseStack, this.playerInventoryTitle, 8.0F, (float) (146), 4210752);
     }
 
     @Override
@@ -44,9 +48,5 @@ public class FilterScreen extends AbstractContainerScreen<FilterMenu> {
         int startX = (this.width - this.imageWidth) / 2;
         int startY = (this.height - this.imageHeight) / 2;
         blit(poseStack, startX, startY, 0, 0, this.imageWidth, this.imageHeight);
-        Slot slot = this.menu.getSlot(0);
-        if (!slot.hasItem()) {
-            blit(poseStack, this.leftPos + slot.x, this.topPos + slot.y, this.imageWidth, 0, 16, 16);
-        }
     }
 }

@@ -1,6 +1,7 @@
 package com.lotkey.filtermod.world.inventory;
 
 import com.lotkey.filtermod.init.ModContainers;
+import com.lotkey.filtermod.world.level.block.entity.FilterBlockEntity;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
@@ -16,36 +17,59 @@ import net.minecraft.world.item.ItemStack;
  */
 public class FilterMenu extends AbstractContainerMenu {
     private final Container hopperInventory;
+    private static final int Size = 50;
+    private static final int HopperOffsetX = 44;
+    private static final int HopperOffsetY = 18;
+    private static final int FilterOffsetX = 8;
+    private static final int FilterOffsetY = 54;
+    private static final int InventoryOffsetX = 8;
+    private static final int InventoryOffsetY = 158;
+    private static final int HotbarOffsetX = InventoryOffsetX;
+    private static final int HotbarOffsetY = 216;
 
     public FilterMenu(int windowId, Inventory playerInventory, FriendlyByteBuf data) {
-        this(windowId, playerInventory, new SimpleContainer(6));
+        this(windowId, playerInventory, new SimpleContainer(Size));
+    }
+
+    public FilterMenu(int windowId, Inventory playerInventory, FilterBlockEntity block) {
+        this(windowId, playerInventory, (Container) block);
     }
 
     public FilterMenu(int windowId, Inventory playerInventory, Container hopperInventory) {
         super(ModContainers.FILTER.get(), windowId);
         this.hopperInventory = hopperInventory;
-        checkContainerSize(hopperInventory, 6);
+        checkContainerSize(hopperInventory, Size);
         hopperInventory.startOpen(playerInventory.player);
 
-        this.addSlot(new Slot(hopperInventory, 0, 26, 20) {
-            @Override
-            public int getMaxStackSize() {
-                return 1;
-            }
-        });
-
         for (int i = 0; i < 5; i++) {
-            this.addSlot(new Slot(hopperInventory, i + 1, 62 + i * 18, 20));
+            // add hopper slots
+            this.addSlot(new Slot(hopperInventory, i, HopperOffsetX + (i * 18), HopperOffsetY));
         }
 
+        // add filter slots
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 9; j++) {
+                this.addSlot(
+                        new Slot(hopperInventory, (i * 9) + j + 5, FilterOffsetX + (j * 18), FilterOffsetY + (i * 18)) {
+                            @Override
+                            public int getMaxStackSize() {
+                                return 1;
+                            }
+                        });
+            }
+        }
+
+        // add inventory slots
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
-                this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, i * 18 + 51));
+                this.addSlot(new Slot(playerInventory, (i * 9) + j + 9, InventoryOffsetX + (j * 18),
+                        InventoryOffsetY + (i * 18)));
             }
         }
 
+        // add hotbar slots
         for (int i = 0; i < 9; i++) {
-            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 109));
+            this.addSlot(new Slot(playerInventory, i, HotbarOffsetX + (i * 18), HotbarOffsetY));
         }
 
     }

@@ -114,27 +114,30 @@ public class FilterMinecart extends AbstractMinecartContainer implements Hopper,
 
     @Override
     public int getContainerSize() {
-        return 6;
+        return 50;
     }
 
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-        return index != 0 && (this.getItem(0).isEmpty() || stack.getItem() == this.getItem(0).getItem());
+        return index < 5 && itemIsInFilter(stack.getItem());
     }
 
     @Override
     public int[] getSlotsForFace(Direction side) {
-        return IntStream.range(1, this.getContainerSize()).toArray();
+        return IntStream.range(0, 5).toArray();
     }
 
     @Override
     public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction) {
-        return index != 0 && (this.getItem(0).isEmpty() || stack.getItem() == this.getItem(0).getItem());
+        if (index < 5) {
+            return itemIsInFilter(stack.getItem());
+        }
+        return !(itemIsInFilter(stack.getItem()) || filterIsFull());
     }
 
     @Override
     public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
-        return index != 0;
+        return index < 5;
     }
 
     @Override
@@ -216,5 +219,14 @@ public class FilterMinecart extends AbstractMinecartContainer implements Hopper,
                 .reduce(0F, Float::sum);
         filled /= (this.getContainerSize() - 1.0F);
         return Mth.floor(filled * 14.0F) + (filled > 0 ? 1 : 0);
+    }
+
+    private boolean itemIsInFilter(Item item) {
+        return this.getItemStacks().subList(5, 50).stream()
+                .anyMatch(stack -> (!stack.isEmpty() && stack.getItem() == item));
+    }
+
+    private boolean filterIsFull() {
+        return this.getItemStacks().subList(5, 50).stream().allMatch(stack -> !stack.isEmpty());
     }
 }
